@@ -1,3 +1,4 @@
+#!/usr/bin/perl -w
 use Storable;
 use JSON::PP;
 
@@ -21,11 +22,17 @@ sub split_code($) {
 	return $path;
 }
 
-$barcode = $1;
+# (1) quit unless we have the correct number of command-line args
+$num_args = $#ARGV + 1;
+if ($num_args != 2) {
+    print "\nUsage: name.pl first_name last_name\n";
+    exit;
+}
+
+$barcode = $ARGV[0];
 $path = split_code($barcode);
 
-# my $file = '/mnt/podata/products/004/815/162/3426/product.sto';
-my $result = retrieve "/mnt/podata/products/$barcode/product.sto";
+my $result = retrieve "/mnt/podata/products/$path/product.sto";
 
 # use Data::Dumper;
 # $Data::Dumper::Purity = 1;
