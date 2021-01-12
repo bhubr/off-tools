@@ -24,8 +24,8 @@ sub split_code($) {
 
 # (1) quit unless we have the correct number of command-line args
 $num_args = $#ARGV + 1;
-if ($num_args != 2) {
-    print "\nUsage: name.pl first_name last_name\n";
+if ($num_args != 1) {
+    print "\nUsage: dump.pl <barcode>\n";
     exit;
 }
 
