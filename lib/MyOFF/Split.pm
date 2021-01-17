@@ -5,9 +5,7 @@ package MyOFF::Split;
 # lib/ProductOpener/Product.pm
 # FIXME: bug #677
 sub split_code($) {
-  print "SPLIT >>\n\n";
-  my $code = $_[0];
-  print "SPLIT $code\n\n";
+  my $code = shift;
 
 	# Require at least 4 digits (some stores use very short internal barcodes, they are likely to be conflicting)
 	if ($code !~ /^\d{4,24}$/) {
@@ -22,12 +20,5 @@ sub split_code($) {
 	}
 	return $path;
 }
-
-# # (1) quit unless we have the correct number of command-line args
-# $num_args = $#ARGV + 1;
-# if ($num_args != 1) {
-#     print "\nUsage: dump.pl <barcode>\n";
-#     exit;
-# }
 
 1;

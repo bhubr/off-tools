@@ -3,6 +3,7 @@ package MyOFF::StoReader;
 use utf8;
 use Dancer2;
 use Storable;
+use JSON qw//;;
 use Dotenv -load;
 
 use MyOFF::Split;
@@ -13,19 +14,36 @@ our $ROOT = $ENV{"PRODUCTS_ROOT"};
 print "$ROOT\n";
 my $barcode = "3990116170001";
 
-get '/' => sub {
-    template 'index' => { 'title' => 'MyOFF::StoReader' };
+set engines =>
+{
+    serializer =>
+    {
+        JSON =>
+        {
+           allow_nonref => 1
+        },
+    }
 };
 
-get '/products/:barcode' => sub {
-    # my $result = retrieve "\%PRODUCTS_ROOT/$path/product.sto";
-    # my $encoded_result = encode_json $result;
-    my $barcode = route_parameters->get('barcode');
-    # print "Barcode: [$barcode]\n";
-    my $path = MyOFF::Split::split_code($barcode);
-    # print "Barcode: [$path]\n";
+set serializer      => 'JSON';
+set content_type    => 'application/json';
 
-    template 'product' => { 'title' => 'MyOFF::StoReader', 'barcode' => $barcode, 'path' => $path };
+# get '/' => sub {
+#     template 'index' => { 'title' => 'MyOFF::StoReader' };
+# };
+
+get '/products/:barcode' => sub {
+    my $barcode = route_parameters->get('barcode');
+    my $path = MyOFF::Split::split_code($barcode);
+    my $result = retrieve "$ROOT/$path/changes.sto";
+    # my $encoded_result = encode_json $result;
+    return $result;
+    # template 'product' => {
+    #     'title' => 'MyOFF::StoReader',
+    #     'barcode' => $barcode,
+    #     'path' => $path,
+    #     'product' => $encoded_result
+    # };
 };
 
 true;
